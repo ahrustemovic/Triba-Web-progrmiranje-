@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Igrica</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="../css/novaIgra.css">
+</head>
+
+<body id="novaIgra">
+	<div class="meni">
+		<p><a href="" > Nova Igra </a></p>
+		<p><a href="upute.html"> Upute </a></p>
+		<p><a href="oProjektu.html"> O projektu </a></p>
+	</div>
+
+	<div class="container margina">
+		<h3 class="margina naslov">Triba</h3>
+		<div class="col-lg-6 col-sm-10" id="informacije">
+			<form class="form-horizontal" id="f" >
+				<label class="control-label col-sm-4">Izaberite težinu </label>
+			    <button type="button" class="btn btn-primary" onclick="laksa()">Lagan</button>
+			    <button type="button" class="btn btn-primary" onclick="srednja()">Srednji</button>
+			    <button type="button" class="btn btn-primary" onclick="teza()">Teški</button>
+			    <button type="button" class="btn btn-primary" onclick="oblik()">Promijenite oblik</button>
+			</form>
+
+			<p id="kraj"></p>
+			<p id="dugme">
+			 	<button id="revans" class="btn btn-info" onclick="ocisti()">Igrajte ponovo!</button>
+			 </p>
+		</div>
+		
+			<canvas id="moj" width="600px" height="550px"> </canvas>
+		
+		
+	</div>
+
+	<script type="text/javascript">
+		var canvas = document.getElementById("moj");
+		var ctx = canvas.getContext("2d");
+		var igrac = true;
+		var boja;
+		var sveTacke = [];
+		let vrsta_igre;
+		var ko_igra_prvi = true;
+
+
+		window.onload=function(){
+			$("#moj").hide();
+			$("#dugme").hide();
+		}
+
+		//koristim kad pravim levele 
+		function crtajTackiceLaksa() {
+			vrsta_igre = "laksa";
+			canvas.width = 300;
+			canvas.height = 250;
+			sveTacke = [];
+			for (let i = 1; i <= 5; i++) {
+				for (let j = 1; j <= 4; j++) {
+					ctx.beginPath();
+					ctx.arc(i*50, j*50, 7, 0, Math.PI*2, true);
+					ctx.closePath();
+					ctx.fill();		
+					sveTacke.push([i*50, j*50]);					
+				}
+			} 
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(5, 50);
+			ctx.lineTo(5, 200);
+			ctx.stroke();
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+  			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(295, 50);
+			ctx.lineTo(295, 200);
+			ctx.stroke();
+
+		}
+
+		function crtajTackiceSrednja() {
+			vrsta_igre = "srednja";
+			canvas.width = 400;
+			canvas.height = 350;
+			sveTacke = [];
+			for (let i = 1; i <= 7; i++) {
+				for (let j = 1; j <= 6; j++) {
+					ctx.beginPath();
+					ctx.arc(i*50, j*50, 7, 0, Math.PI*2, true);
+					ctx.closePath();
+					ctx.fill();	
+					sveTacke.push([i*50, j*50]);						
+				}
+			}
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(5, 50);
+			ctx.lineTo(5, 300);
+			ctx.stroke();
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+  			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(395, 50);
+			ctx.lineTo(395, 300);
+			ctx.stroke();
+
+		}
+
+		function crtajTackiceTesko() {
+			vrsta_igre = "teska";
+			sveTacke = [];
+			for (let i = 1; i <= 11; i++) {
+				for (let j = 1; j <= 10; j++) {
+					ctx.beginPath();
+					sveTacke.push([i*50,j*50]);
+					ctx.arc(i*50, j*50, 7, 0, Math.PI*2, true);
+					ctx.closePath();
+					ctx.fill();	
+										
+				}
+			}
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(5, 50);
+			ctx.lineTo(5, 500);
+			ctx.stroke();
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+  			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(595, 50);
+			ctx.lineTo(595, 500);
+			ctx.stroke();
+		}
+
+
+		//OBLIK
+		function crtajTackiceOblik() {
+			vrsta_igre = "oblik";
+			canvas.width = 300;
+			canvas.height = 300;
+			sveTacke = [];
+			for (let i = 1; i <= 5; i++) {
+				for (let j = 1; j <= 5; j++) {
+					if ((i==3 || j==3) || (i==2 && (j==2 || j==4) || (i==4 && (j==2 || j==4)))) {
+						ctx.beginPath();
+						ctx.arc(i*50, j*50, 7, 0, Math.PI*2, true);
+						ctx.closePath();
+						ctx.fill();		
+						sveTacke.push([i*50, j*50]);
+					}					
+				}
+			} 
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(5, 50);
+			ctx.lineTo(5, 250);
+			ctx.stroke();
+
+			if(igrac) {
+				ctx.strokeStyle = "yellow";
+			}
+			else ctx.strokeStyle = "blue";
+  			ctx.lineWidth = 3;
+			ctx.beginPath();
+			ctx.moveTo(295, 50);
+			ctx.lineTo(295, 250);
+			ctx.stroke();
+
+		}
+
+		//tezine
+		function laksa() {
+			$("#moj").show();
+			crtajTackiceLaksa();
+			$("#f").hide();
+		}
+
+		function srednja() {
+			$("#moj").show();
+			crtajTackiceSrednja();
+			$("#f").hide();
+		}
+
+		function teza() {
+			$("#moj").show();
+			crtajTackiceTesko();
+			$("#f").hide();
+		}
+
+		function oblik() {
+			$("#moj").show();
+			crtajTackiceOblik();
+			$("#f").hide();
+		}
+
+/* Uzme tacku provjeri da je u listi_zauzetih(vrhovi ostalih trouglova) ako nije doda je u listu_vrhova i uzme drugu tacku isto uradi i za nju i za trecu. kad uzme sve tri tacke provjeri da li presjeca neki drugi trougao ako ne doda u listu_trouglova i nacrta trougao. promijeni boju i igra sljedeci igrac.
+*/
+		var lista_zauzetih = [];
+		var lista_vrhova = [];
+		var lista_trouglova = [];
+ 
+		canvas.addEventListener("click", function(event) {
+			var x = event.pageX - canvas.offsetLeft;
+			var y = event.pageY - canvas.offsetTop;
+			
+			var xk = x % 50;
+			var yk = y % 50;
+	
+			if (((xk >=43 && xk <= 49) || (xk >=0 && xk <= 7)) && ((yk >=43 && yk <= 49) || (yk >=0 && yk <= 7))) {
+
+				if(xk >=43 && xk <= 49) {
+					x = x + (50 - xk)
+				}
+				else {
+					x = x - xk;
+				}
+				if(yk >=43 && yk <= 49) {
+					y = y + (50 - yk)
+				}
+				else {
+					y = y - yk;
+				}
+
+				provjeraTacke(x,y);
+			}
+		})
+
+
+		function nacrtajTrougao (ax, ay, bx, by, cx, cy) {
+			ctx.beginPath();
+			ctx.moveTo(ax, ay);
+			ctx.lineTo(bx, by);
+			ctx.lineTo(cx, cy);
+			ctx.lineTo(ax, ay);
+			ctx.closePath();
+			ctx.lineWidth = 5;
+			ctx.stroke();
+
+			if(!igrac) {
+				ctx.strokeStyle = "yellow";
+
+			}
+			else ctx.strokeStyle = "blue";
+			promijeni_boju_linija();
+		}
+
+		function promijeni_boju_linija(){
+			ctx.beginPath();
+			ctx.lineWidth = 3;
+
+			if(vrsta_igre == "laksa") {
+				ctx.moveTo(5, 50);
+				ctx.lineTo(5, 200);
+				ctx.stroke();
+
+				ctx.moveTo(295, 50);
+				ctx.lineTo(295, 200);
+				
+			}
+			else if(vrsta_igre == "srednja") {
+				ctx.moveTo(5, 50);
+				ctx.lineTo(5, 300);
+				ctx.stroke();
+
+				ctx.moveTo(395, 50);
+				ctx.lineTo(395, 300);
+				
+			}
+			else if (vrsta_igre == 'teska'){
+				ctx.moveTo(5, 50);
+				ctx.lineTo(5, 500);
+				ctx.stroke();
+
+				ctx.moveTo(595, 50);
+				ctx.lineTo(595, 500);
+				
+			}
+
+			else {
+				ctx.moveTo(5, 50);
+				ctx.lineTo(5, 250);
+				ctx.stroke();
+
+				ctx.moveTo(295, 50);
+				ctx.lineTo(295, 250);
+			}
+
+			ctx.closePath();
+			ctx.stroke();
+		}
+
+		function provjeraTacke(i, j) {
+			if (lista_zauzetih.some(point => point[0] === i && point[1] === j)) {
+				alert("Tacka je u listi zauzetih odaberi drugu tacku!");
+			} 
+
+		    else {
+		     	lista_vrhova.push([i, j]);
+		     	if (lista_vrhova.length === 3) {
+		     		if (daLiSuKolinearne(lista_vrhova[0], lista_vrhova[1], lista_vrhova[2])) {
+		     			alert("Odaberi druge tacke!");
+		     			lista_vrhova = [];
+		     		}
+		     		// pozivam funkciju da li taj trougao presjeca neki vec nacrtani
+		     		else if (daLiJeValidanPotez(lista_vrhova)) {
+					    lista_trouglova.push(lista_vrhova);
+					    lista_zauzetih.push(lista_vrhova[0]);
+					    lista_zauzetih.push(lista_vrhova[1]);
+					    lista_zauzetih.push(lista_vrhova[2]);
+					    izbaciTackuIzListeSvihTacaka(lista_vrhova[0], lista_vrhova[1], lista_vrhova[2]);
+					    nacrtajTrougao(lista_vrhova[0][0], lista_vrhova[0][1], lista_vrhova[1][0], lista_vrhova[1][1], lista_vrhova[2][0], lista_vrhova[2][1]);
+					    
+					    let kraj = jeLiKraj();
+					    if (kraj) {
+					    	var tekst = "KRAJ! Pobjednik je ";
+					    	if (igrac) {
+					    		tekst += "prvi igrac!";
+					    	}
+					    	else { tekst += "drugi igrac!"
+					    	}
+					    	document.getElementById("kraj").innerHTML = tekst; 
+					    	$("#dugme").show();
+
+					    }
+						igrac = !igrac;
+						lista_vrhova = [];
+					}
+					else {
+						alert("Neispravan potez!");
+						//igrac = !igrac;
+						lista_vrhova = [];
+					}
+				}
+
+		    }
+		}
+
+		function izbaciTackuIzListeSvihTacaka(tacka_za_izbaciti1, tacka_za_izbaciti2, tacka_za_izbaciti3) {
+			sveTacke = sveTacke.filter(point => (point[0] != tacka_za_izbaciti1[0] || point[1] != tacka_za_izbaciti1[1]));
+			sveTacke = sveTacke.filter(point => (point[0] != tacka_za_izbaciti2[0] || point[1] != tacka_za_izbaciti2[1]));
+			sveTacke = sveTacke.filter(point => (point[0] != tacka_za_izbaciti3[0] || point[1] != tacka_za_izbaciti3[1]));
+			let sve_tacke_za_izbaciti = [];
+			for (var i = 0; i < sveTacke.length; i++) {
+				if(daLiSuKolinearne(sveTacke[i], tacka_za_izbaciti1, tacka_za_izbaciti2)) {
+					if(sveTacke[i][0] >= Math.min(tacka_za_izbaciti1[0], tacka_za_izbaciti2[0]) && sveTacke[i][0] <= Math.max(tacka_za_izbaciti1[0], tacka_za_izbaciti2[0])){
+						if(sveTacke[i][1] >= Math.min(tacka_za_izbaciti1[1], tacka_za_izbaciti2[1]) && sveTacke[i][1] <= Math.max(tacka_za_izbaciti1[1], tacka_za_izbaciti2[1])){
+						sve_tacke_za_izbaciti.push(sveTacke[i]);
+						}
+					}
+				}
+				if(daLiSuKolinearne(sveTacke[i], tacka_za_izbaciti1, tacka_za_izbaciti3)) {
+					if(sveTacke[i][0] >= Math.min(tacka_za_izbaciti1[0], tacka_za_izbaciti3[0]) && sveTacke[i][0] <= Math.max(tacka_za_izbaciti1[0], tacka_za_izbaciti3[0])){
+						if(sveTacke[i][1] >=Math. min(tacka_za_izbaciti1[1], tacka_za_izbaciti3[1]) && sveTacke[i][1] <= Math.max(tacka_za_izbaciti1[1], tacka_za_izbaciti3[1])){
+						sve_tacke_za_izbaciti.push(sveTacke[i]);
+						}
+					}
+				
+				}
+				if(daLiSuKolinearne(sveTacke[i], tacka_za_izbaciti2, tacka_za_izbaciti3)) {
+					if(sveTacke[i][0] >= Math.min(tacka_za_izbaciti2[0], tacka_za_izbaciti3[0]) && sveTacke[i][0] <= Math.max(tacka_za_izbaciti2[0], tacka_za_izbaciti3[0])){
+						if(sveTacke[i][1] >= Math.min(tacka_za_izbaciti2[1], tacka_za_izbaciti3[1]) && sveTacke[i][1] <= Math.max(tacka_za_izbaciti2[1], tacka_za_izbaciti3[1])){
+							sve_tacke_za_izbaciti.push(sveTacke[i]);
+						}
+					}
+				}
+			}
+			
+			sveTacke = sveTacke.filter( el => !sve_tacke_za_izbaciti.includes(el));
+
+		}
+
+		function daLiSijeceTrougao(trougao1, trougao2) {
+			var brojac = 0;
+			var x1 = trougao2[0][0];
+			var y1 = trougao2[0][1];
+			var x2 = trougao2[1][0];
+			var y2 = trougao2[1][1];
+			var x3 = trougao2[2][0];
+			var y3 = trougao2[2][1];
+			var tackaA = [x1, y1];
+			var tackaB = [x2, y2];
+			var tackaC = [x3, y3];
+			if (daLiJeTackaUnutarTrougla(tackaA, trougao1))
+				brojac++;
+			if (daLiJeTackaUnutarTrougla(tackaB, trougao1))
+				brojac++;
+			if (daLiJeTackaUnutarTrougla(tackaC, trougao1))
+				brojac++;
+
+			return (brojac > 0) && (brojac < 3)
+		}
+
+
+		
+		function presjekDvijePrave(prava1, prava2) {
+			var x1 = prava1[0][0];
+			var y1 = prava1[0][1];
+			var x2 = prava1[1][0];
+			var y2 = prava1[1][1];
+
+			var x3 = prava2[0][0];
+			var y3 = prava2[0][1];
+			var x4 = prava2[1][0];
+			var y4 = prava2[1][1];
+			var t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+			var u = ((x1 - x3) * (y1 - y2) - (y1 - y3) * (x1 - x2)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+			return t >= 0 && t <= 1 && u >= 0 && u <= 1;
+		}
+
+		function daLiSijeceStraniceTrougla(trougao1, trougao2) {
+			var sijekuSe = false;
+			var prava11 = [];
+			var prava12 = [];
+			var prava13 = [];
+
+			var prava21 = [];
+			var prava22 = [];
+			var prava23 = [];
+
+			prava11.push(trougao1[0]);
+			prava11.push(trougao1[1]);
+			prava12.push(trougao1[1]);
+			prava12.push(trougao1[2]);
+			prava13.push(trougao1[2]);
+			prava13.push(trougao1[0]);
+
+			prava21.push(trougao2[0]);
+			prava21.push(trougao2[1]);
+			prava22.push(trougao2[1]);
+			prava22.push(trougao2[2]);
+			prava23.push(trougao2[2]);
+			prava23.push(trougao2[0]);
+
+			if(presjekDvijePrave(prava21, prava11) || presjekDvijePrave(prava22, prava11) || presjekDvijePrave(prava23, prava11) || presjekDvijePrave(prava21, prava12) || presjekDvijePrave(prava22, prava12) || presjekDvijePrave(prava23, prava12) || presjekDvijePrave(prava21, prava13) || presjekDvijePrave(prava22, prava13) || presjekDvijePrave(prava23, prava13)) {
+					sijekuSe = true;
+			}
+			return sijekuSe;
+		}
+
+
+
+		function daLiJeValidanPotez(trougao) {
+			for (var i = 0; i < lista_trouglova.length; i++) {
+				if(daLiSijeceTrougao(lista_trouglova[i], trougao) || daLiSijeceTrougao(trougao, lista_trouglova[i]) || daLiSijeceStraniceTrougla(lista_trouglova[i], trougao)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		function daLiJeTackaUnutarTrougla(tacka, trougao){
+			var x1 = trougao[0][0];
+			var y1 = trougao[0][1];
+			var x2 = trougao[1][0];
+			var y2 = trougao[1][1];
+			var x3 = trougao[2][0];
+			var y3 = trougao[2][1];
+
+			var denominator = ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+			var a = ((y2 - y3) * (tacka[0] - x3) + (x3 - x2) * (tacka[1] - y3)) / denominator;
+			var b = ((y3 - y1) * (tacka[0] - x3) + (x1 - x3) * (tacka[1] - y3)) / denominator;
+			var c = 1 - a - b;
+
+			 return (a >= 0) && (b >= 0) && (c >= 0);
+			
+		}
+
+		function jeLiKraj() {
+			var kraj = true;
+			for(let i = 0; i < sveTacke.length; i++ ) {
+				for(let j = i + 1; j < sveTacke.length; j++ ) {
+					for(let k = j + 1; k < sveTacke.length; k++ ) {
+						
+						if (!(daLiSuKolinearne(sveTacke[i], sveTacke[j], sveTacke[k]))) {
+							let imaLiPoteza = daLiJeValidanPotez([sveTacke[i], sveTacke[j], sveTacke[k]]);	
+							if(imaLiPoteza) {
+								kraj = false;
+							}
+						}
+
+					}
+				}
+			}
+			return kraj;
+		}
+
+		function daLiSuKolinearne(x1, x2, x3) {
+			return ((x2[1] - x1[1]) * (x3[0] - x1[0]) == (x3[1] - x1[1]) * (x2[0] - x1[0]));
+		}
+
+
+		function ocisti(){
+			ctx.clearRect(0,0,600,550);
+			lista_zauzetih = [];
+			lista_vrhova = [];
+			lista_trouglova = [];
+			sveTacke = [];	
+			document.getElementById("kraj").innerHTML = "";
+
+			igrac = !ko_igra_prvi;
+			ko_igra_prvi = !ko_igra_prvi;
+
+			if(vrsta_igre==='laksa')
+				crtajTackiceLaksa();
+			else if(vrsta_igre==='srednja')
+				crtajTackiceSrednja();
+			else if(vrsta_igre ==='teza')
+				crtajTackiceTesko();
+			else
+				crtajTackiceOblik();
+			$("#dugme").hide();
+			
+		}
+
+
+	</script>
+	
+	
+</body>

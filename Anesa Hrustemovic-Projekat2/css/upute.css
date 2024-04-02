@@ -1,0 +1,52 @@
+#upute{
+	background-color: #C2B9B0;
+}
+
+.meni {
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   background-color: #7E685A;
+   color: #C2B9B0;
+   text-align: center;
+   display: inline-block;
+   padding-top:5px;
+   horizontal
+  }
+
+.meni p{
+	width: 33%; 
+	float: left;
+}
+
+.meni a {
+	text-decoration: none;
+	color: #C2B9B0;
+	
+}
+
+.meni a:hover{
+	background-color: #AFD275;
+	color: #7E685A;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 10px;
+	padding-top: 5px;
+}
+
+.igrica{
+	border-radius: 3%;
+	
+	margin-left: 35px;
+	height: 70%;
+	width: 80%;
+	
+}
+
+.margina {
+	margin-top: 60px;
+}
+.dole {
+	margin-top: 30px;
+}
